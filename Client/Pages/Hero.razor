@@ -1,0 +1,27 @@
+﻿
+@page "/heroes/{id:int}"
+@inject IHeroesService HeroesService
+
+@if (hero == null)
+{
+    <h2>Loading.....</h2>
+}
+else
+{
+<h3>@hero.Name</h3>
+}
+
+@code {
+
+    //Poner :int para parametros cuando se pasa la ID
+    [Parameter]
+    public int id { get; set; }
+
+    SuperHero hero = new SuperHero();
+
+    protected override async Task OnInitializedAsync()
+    {
+        hero = await HeroesService.GetHero(id);
+
+    }
+}

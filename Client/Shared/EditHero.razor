@@ -1,0 +1,38 @@
+﻿@inject IHeroesService HeroService
+
+<h3>EditHero</h3>
+
+<EditForm Model="hero" OnSubmit="CheckSubmit">
+
+    <div class="form-group"><label>Name</label><InputText @bind-Value="hero.Name" class="form-control"></InputText></div>
+    <div class="form-group">
+        <label>Comic</label><br />
+        <InputRadioGroup @bind-Value="comic" class="form-control">
+            @foreach (var unit in HeroService.Comics)
+            {
+                <InputRadio Value="@unit.Id" /> <span style="padding-left: 5px;">@unit.Name</span>
+            }
+
+        </InputRadioGroup>
+        
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</EditForm>
+
+@code {
+
+    public int comic { get; set; } = 0;
+    public SuperHero hero { get; set; } = new SuperHero();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await HeroService.GetComics();
+    }
+
+    void CheckSubmit()
+    {
+        hero.Comic = HeroService.Comics.FirstOrDefault(c => c.Id == comic);
+        Console.WriteLine($"Worked! {hero.Name}");
+        
+    }
+}

@@ -1,0 +1,54 @@
+﻿@page "/heroes"
+@inject IHeroesService HeroesService
+@inject NavigationManager Nav
+<h3>Heroes</h3>
+
+
+@if(heroes.Count==0)
+{
+<h2>Loading....</h2>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Comic</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var hero in heroes)
+            {
+                <tr>
+                    <td>@hero.Name</td>
+                    <td>@hero.Comic.Name</td>
+                    <td><button class="btn btn-primary" @onclick="(()=> Details(hero.Id))">Details</button></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <EditHero></EditHero>
+}
+
+
+
+
+@code 
+{  
+
+    List<SuperHero> heroes = new List<SuperHero>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        heroes = await HeroesService.GetHeroes();
+        await HeroesService.GetComics();
+    }
+
+    void Details(int id)
+    {
+        Nav.NavigateTo($"/heroes/{id}");
+    }
+}
